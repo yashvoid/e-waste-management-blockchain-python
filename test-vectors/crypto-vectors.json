@@ -1,0 +1,352 @@
+{
+  "_notice": "TEST ONLY. The private keys in this file are fixed test values. They must never be used as runtime wallets or stored in application data.",
+  "sha256": [
+    {
+      "input_hex": "",
+      "output_hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "input_hex": "616263",
+      "output_hex": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    }
+  ],
+  "canonical_valid": [
+    {
+      "name": "sorts keys by UTF-8 bytes",
+      "input_text": "{\"b\":1,\"a\":2}",
+      "canonical_text": "{\"a\":2,\"b\":1}",
+      "canonical_hex": "7b2261223a322c2262223a317d"
+    },
+    {
+      "name": "sorts escaped keys by raw UTF-8 bytes",
+      "input_text": "{\"a\":1,\"\\\\\":2,\"\\\"\":3,\"!\":4,\"\\u001f\":5}",
+      "canonical_text": "{\"\\u001f\":5,\"!\":4,\"\\\"\":3,\"\\\\\":2,\"a\":1}",
+      "canonical_hex": "7b225c7530303166223a352c2221223a342c225c22223a332c225c5c223a322c2261223a317d"
+    },
+    {
+      "name": "removes insignificant whitespace",
+      "input_text": "{ \"b\" : [ 1 , 2 ] , \"a\" : { } }",
+      "canonical_text": "{\"a\":{},\"b\":[1,2]}",
+      "canonical_hex": "7b2261223a7b7d2c2262223a5b312c325d7d"
+    },
+    {
+      "name": "orders U+FFFD before U+1F600 by UTF-8 bytes",
+      "input_text": "{\"\\ud83d\\ude00\":1,\"\\ufffd\":2}",
+      "canonical_text": "{\"�\":2,\"😀\":1}",
+      "canonical_hex": "7b22efbfbd223a322c22f09f9880223a317d"
+    },
+    {
+      "name": "escapes only quote, backslash and controls",
+      "input_text": "{\"k\":\"say \\\"hi\\\" \\\\ a\\u0001b\\u001f/\"}",
+      "canonical_text": "{\"k\":\"say \\\"hi\\\" \\\\ a\\u0001b\\u001f/\"}",
+      "canonical_hex": "7b226b223a22736179205c2268695c22205c5c20615c7530303031625c75303031662f227d"
+    },
+    {
+      "name": "keeps NFC text raw",
+      "input_text": "{\"s\":\"\\u00e9\"}",
+      "canonical_text": "{\"s\":\"é\"}",
+      "canonical_hex": "7b2273223a22c3a9227d"
+    },
+    {
+      "name": "orders NFC keys by bytes",
+      "input_text": "{\"\\u00e9\":1,\"e\":2}",
+      "canonical_text": "{\"e\":2,\"é\":1}",
+      "canonical_hex": "7b2265223a322c22c3a9223a317d"
+    },
+    {
+      "name": "accepts safe integer boundaries",
+      "input_text": "{\"max\":9007199254740991,\"min\":-9007199254740991}",
+      "canonical_text": "{\"max\":9007199254740991,\"min\":-9007199254740991}",
+      "canonical_hex": "7b226d6178223a393030373139393235343734303939312c226d696e223a2d393030373139393235343734303939317d"
+    },
+    {
+      "name": "accepts zero and negative integers",
+      "input_text": "[0,-1,10]",
+      "canonical_text": "[0,-1,10]",
+      "canonical_hex": "5b302c2d312c31305d"
+    },
+    {
+      "name": "accepts null, booleans and empty containers",
+      "input_text": "{\"z\":[],\"a\":null,\"m\":[true,false]}",
+      "canonical_text": "{\"a\":null,\"m\":[true,false],\"z\":[]}",
+      "canonical_hex": "7b2261223a6e756c6c2c226d223a5b747275652c66616c73655d2c227a223a5b5d7d"
+    },
+    {
+      "name": "accepts nesting depth 32",
+      "input_text": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "canonical_text": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "canonical_hex": "5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d5d"
+    }
+  ],
+  "canonical_invalid": [
+    {
+      "name": "negative zero",
+      "input": "{\"a\":-0}"
+    },
+    {
+      "name": "decimal fraction",
+      "input": "{\"a\":1.0}"
+    },
+    {
+      "name": "lowercase exponent",
+      "input": "{\"a\":1e2}"
+    },
+    {
+      "name": "uppercase exponent",
+      "input": "{\"a\":1E2}"
+    },
+    {
+      "name": "NaN",
+      "input": "{\"a\":NaN}"
+    },
+    {
+      "name": "Infinity",
+      "input": "{\"a\":Infinity}"
+    },
+    {
+      "name": "negative Infinity",
+      "input": "{\"a\":-Infinity}"
+    },
+    {
+      "name": "unsafe positive integer",
+      "input": "{\"a\":9007199254740992}"
+    },
+    {
+      "name": "unsafe negative integer",
+      "input": "{\"a\":-9007199254740992}"
+    },
+    {
+      "name": "leading zero",
+      "input": "{\"a\":01}"
+    },
+    {
+      "name": "leading plus sign",
+      "input": "{\"a\":+1}"
+    },
+    {
+      "name": "duplicate key",
+      "input": "{\"a\":1,\"a\":2}"
+    },
+    {
+      "name": "duplicate key written with an escape",
+      "input": "{\"\\u0061\":1,\"a\":2}"
+    },
+    {
+      "name": "decomposed value text",
+      "input": "{\"a\":\"é\"}"
+    },
+    {
+      "name": "decomposed key text",
+      "input": "{\"é\":1}"
+    },
+    {
+      "name": "lone high surrogate escape",
+      "input": "{\"a\":\"\\ud800\"}"
+    },
+    {
+      "name": "lone low surrogate escape",
+      "input": "{\"a\":\"\\udc00\"}"
+    },
+    {
+      "name": "raw control character in string",
+      "input": "{\"a\":\"x\u0001y\"}"
+    },
+    {
+      "name": "raw tab in string",
+      "input": "{\"a\":\"x\ty\"}"
+    },
+    {
+      "name": "trailing comma",
+      "input": "[1,]"
+    },
+    {
+      "name": "byte order mark",
+      "input": "﻿{}"
+    },
+    {
+      "name": "nesting depth 33",
+      "input": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+    },
+    {
+      "name": "trailing content",
+      "input": "{} x"
+    },
+    {
+      "name": "empty input",
+      "input": ""
+    },
+    {
+      "name": "unquoted key",
+      "input": "{a:1}"
+    },
+    {
+      "name": "single-quoted key",
+      "input": "{'a':1}"
+    }
+  ],
+  "domain_hash": [
+    {
+      "tag": "EWASTE-TX-V1",
+      "payload_hex": "7b2266697874757265223a22746573742d6f6e6c79222c226e6574776f726b4964223a22746573742d6e6574776f726b222c226e6f6e6365223a312c2270726f746f636f6c56657273696f6e223a312c227175616e746974794772616d73223a313530302c2273656e6465725075626c69634b6579223a22303332633863333166633966393930633662353565333836356131383461346365353065303934383166326561656233653630656331636561313361366165363435227d",
+      "output_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52"
+    },
+    {
+      "tag": "EWASTE-TX-V1",
+      "payload_hex": "7b2266697874757265223a22746573742d6f6e6c79222c226e6574776f726b4964223a22746573742d6e6574776f726b222c226e6f6e6365223a312c2270726f746f636f6c56657273696f6e223a312c227175616e746974794772616d73223a313530312c2273656e6465725075626c69634b6579223a22303332633863333166633966393930633662353565333836356131383461346365353065303934383166326561656233653630656331636561313361366165363435227d",
+      "output_hex": "2fe3e40197ec35653a54a43a7ceff78c16aff229643fc3c89a14553ef64eefe3"
+    },
+    {
+      "tag": "EWASTE-ADDRESS-V1",
+      "payload_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "output_hex": "d1a429ad8900aa4114ffee702c1c68cfc5a907010ab5bd0602b75b84a862dd97"
+    }
+  ],
+  "addresses": [
+    {
+      "name": "test key A",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "address_hex": "d1a429ad8900aa4114ffee702c1c68cfc5a90701"
+    },
+    {
+      "name": "test key B",
+      "public_key_hex": "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "address_hex": "94617724d3d832570375282f28c88baf33c1b3e7"
+    }
+  ],
+  "transaction": {
+    "canonical_text": "{\"fixture\":\"test-only\",\"networkId\":\"test-network\",\"nonce\":1,\"protocolVersion\":1,\"quantityGrams\":1500,\"senderPublicKey\":\"032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645\"}",
+    "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+    "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+    "private_key_hex": "c9afa9d845ba75166b5c215767b1d6934e50c3db36e89b127b8a622b120f6721",
+    "altered_canonical_text": "{\"fixture\":\"test-only\",\"networkId\":\"test-network\",\"nonce\":1,\"protocolVersion\":1,\"quantityGrams\":1501,\"senderPublicKey\":\"032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645\"}",
+    "altered_digest_hex": "2fe3e40197ec35653a54a43a7ceff78c16aff229643fc3c89a14553ef64eefe3"
+  },
+  "signatures": [
+    {
+      "name": "valid signature over transaction body",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": true
+    },
+    {
+      "name": "wrong public key",
+      "public_key_hex": "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "altered transaction body digest",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "2fe3e40197ec35653a54a43a7ceff78c16aff229643fc3c89a14553ef64eefe3",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "single bit altered digest",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf53",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "high-S signature",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728fd7ed61e9f56b154844d988cfe80144f591e32b00ef0fe69c1c746d5e3a81af6e",
+      "expected_valid": false
+    },
+    {
+      "name": "r equals zero",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "000000000000000000000000000000000000000000000000000000000000000028129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "s equals zero",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f0000000000000000000000000000000000000000000000000000000000000000",
+      "expected_valid": false
+    },
+    {
+      "name": "r equals curve order",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd036414128129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "signature shorter than 64 bytes",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491",
+      "expected_valid": false
+    },
+    {
+      "name": "signature longer than 64 bytes",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d300",
+      "expected_valid": false
+    },
+    {
+      "name": "uppercase signature hex",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "C041919BC246905723150681562275D81E99CF8D57ED82D7E64F651A24F2728F28129E160A94EAB7BB26773017FEBB0928CBB1E5C038B99FA35DF12E95B491D3",
+      "expected_valid": false
+    },
+    {
+      "name": "non-hex signature characters",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "zz41919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "digest shorter than 32 bytes",
+      "public_key_hex": "032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "uncompressed public key prefix 04",
+      "public_key_hex": "042c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae64564b95e4fdb6948c0386e189b006a29f686769b011704275e4459822dc3328085",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "public key prefix 05",
+      "public_key_hex": "052c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "public key without prefix",
+      "public_key_hex": "2c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "public key x coordinate not below field prime",
+      "public_key_hex": "02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    },
+    {
+      "name": "uppercase public key hex",
+      "public_key_hex": "032C8C31FC9F990C6B55E3865A184A4CE50E09481F2EAEB3E60EC1CEA13A6AE645",
+      "digest_hex": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+      "signature_hex": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3",
+      "expected_valid": false
+    }
+  ]
+}

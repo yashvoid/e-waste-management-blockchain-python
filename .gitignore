@@ -3,3 +3,24 @@ dist
 backend/.venv
 __pycache__
 .pytest_cache
+
+# Node identity keys and peer trust material stay private to each laptop
+node-identity/
+**/node-key.pem
+**/trusted-peers.pem
+# Private configuration and credentials
+.env
+.env.*
+!.env.example
+
+# Private cryptographic material
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local blockchain runtime data and backups
+*.jsonl
+*.backup
+*.bak
+backups/

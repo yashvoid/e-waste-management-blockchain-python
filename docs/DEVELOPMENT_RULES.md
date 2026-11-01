@@ -50,7 +50,7 @@ These rules apply to every future implementation task for the E-Waste Management
 6. Use maintained cryptographic libraries. Do not implement cryptographic primitives manually.
 7. Validate request sizes and input formats on every endpoint.
 8. Rate-limit registration and OTP endpoints.
-9. Protect node-management endpoints with operator authentication and authorization.
+9. Protect node-management endpoints with operator authentication and authorization, and accept them only from the node's own computer.
 
 ## 6. Blockchain integrity
 

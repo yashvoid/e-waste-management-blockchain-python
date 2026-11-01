@@ -936,6 +936,7 @@ Ordinary participants cannot access node-management functions.
 - Store password verifiers securely, never plaintext passwords.
 - Expire operator sessions after inactivity.
 - Protect management endpoints with authentication and authorization.
+- Accept management requests only from the node's own computer (loopback addresses); forwarded network headers are not trusted.
 
 Operator access does not allow anyone to edit confirmed blockchain records or bypass validation.
 

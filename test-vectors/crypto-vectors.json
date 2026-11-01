@@ -221,6 +221,47 @@
     "altered_canonical_text": "{\"fixture\":\"test-only\",\"networkId\":\"test-network\",\"nonce\":1,\"protocolVersion\":1,\"quantityGrams\":1501,\"senderPublicKey\":\"032c8c31fc9f990c6b55e3865a184a4ce50e09481f2eaeb3e60ec1cea13a6ae645\"}",
     "altered_digest_hex": "2fe3e40197ec35653a54a43a7ceff78c16aff229643fc3c89a14553ef64eefe3"
   },
+  "transaction_root": [
+    {
+      "name": "empty ordered transaction list",
+      "transactions": [],
+      "output_hex": "3f580132d972e02d542e29fd2d18efcdb2894145de4f174b319c907c32642960"
+    },
+    {
+      "name": "two transactions in order",
+      "transactions": [
+        {
+          "txid": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+          "signature": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3"
+        },
+        {
+          "txid": "2fe3e40197ec35653a54a43a7ceff78c16aff229643fc3c89a14553ef64eefe3",
+          "signature": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3"
+        }
+      ],
+      "output_hex": "b4081f5b80ef54db3628808ed1c0b3a19458f3660274eedbd7722e8408b9d49b"
+    },
+    {
+      "name": "single transaction with valid signature",
+      "transactions": [
+        {
+          "txid": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+          "signature": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728f28129e160a94eab7bb26773017febb0928cbb1e5c038b99fa35df12e95b491d3"
+        }
+      ],
+      "output_hex": "4c4e7d62929ad0762a997ecc1a903cb2af8c1ae586b06962135d99c0790b84c0"
+    },
+    {
+      "name": "same transaction ID with high-S signature",
+      "transactions": [
+        {
+          "txid": "f4a7f72111052bea28d39df54c9acb187bb25b67fe1df41c90cd254b91e4bf52",
+          "signature": "c041919bc246905723150681562275d81e99cf8d57ed82d7e64f651a24f2728fd7ed61e9f56b154844d988cfe80144f591e32b00ef0fe69c1c746d5e3a81af6e"
+        }
+      ],
+      "output_hex": "e7b8a7fb04607104e176a8c471e4881f604e7be52af8403b13ece53523a9a0a6"
+    }
+  ],
   "signatures": [
     {
       "name": "valid signature over transaction body",

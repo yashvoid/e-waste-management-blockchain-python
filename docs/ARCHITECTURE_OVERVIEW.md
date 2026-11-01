@@ -125,6 +125,7 @@ Node-operator functionality:
 
 - Start and stop the node, start and stop mining, view technical logs, manage peer settings, and export or import validated backups.
 - Each operator has a separate operator password and authenticated, time-limited sessions.
+- Node-management functions are accepted only from the node's own computer (loopback addresses), never from the network.
 - Operator access never permits editing confirmed records or bypassing validation.
 
 Node-operator functions are not available to ordinary participants.

@@ -15,7 +15,10 @@ const SIMPLE_ESCAPES: Record<string, string> = {
   t: "\t",
 };
 
-export function parseStrictJsonBytes(bytes: Uint8Array): CanonicalValue {
+export function parseStrictJsonBytes(bytes: Uint8Array, maxBytes: number): CanonicalValue {
+  if (bytes.byteLength > maxBytes) {
+    throw new Error(`Input exceeds the maximum allowed size of ${maxBytes} bytes.`);
+  }
   const text = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }).decode(bytes);
   return new StrictJsonParser(text).parseDocument();
 }

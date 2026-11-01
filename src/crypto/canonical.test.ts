@@ -7,14 +7,14 @@ import { parseStrictJsonBytes } from "./strictJson";
 const encoder = new TextEncoder();
 
 function canonicalizeText(text: string): string {
-  return canonicalText(parseStrictJsonBytes(encoder.encode(text)));
+  return canonicalText(parseStrictJsonBytes(encoder.encode(text), 1024));
 }
 
 describe("canonical serialization", () => {
   for (const vector of vectors.canonical_valid) {
     it(`matches the shared vector: ${vector.name}`, () => {
       expect(canonicalizeText(vector.input_text)).toBe(vector.canonical_text);
-      expect(bytesToHex(canonicalBytes(parseStrictJsonBytes(encoder.encode(vector.input_text))))).toBe(
+      expect(bytesToHex(canonicalBytes(parseStrictJsonBytes(encoder.encode(vector.input_text), 1024)))).toBe(
         vector.canonical_hex,
       );
     });
@@ -43,5 +43,21 @@ describe("canonical serialization", () => {
 
   it("rejects non-plain objects built in code", () => {
     expect(() => canonicalText(new Date(0))).toThrow();
+  });
+});
+
+describe("strict JSON byte limit", () => {
+  it("accepts input exactly at the byte limit", () => {
+    const data = encoder.encode("[]");
+    expect(parseStrictJsonBytes(data, data.byteLength)).toEqual([]);
+  });
+
+  it("rejects input exceeding the byte limit", () => {
+    const data = encoder.encode("[]");
+    expect(() => parseStrictJsonBytes(data, data.byteLength - 1)).toThrow();
+  });
+
+  it("rejects empty input", () => {
+    expect(() => parseStrictJsonBytes(new Uint8Array(0), 1024)).toThrow();
   });
 });
